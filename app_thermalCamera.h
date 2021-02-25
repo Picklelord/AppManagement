@@ -86,6 +86,22 @@ void app_thermalCamera_input() {
 
 }
 
+void drawpixels(float *p, uint8_t rows, uint8_t cols, uint8_t boxWidth, uint8_t boxHeight) {
+  int colorTemp;
+  for (int x=0; x<cols; x++) {
+    for (int y=0; y<rows; y++) {
+      float val = get_point(p, rows, cols, x, y);
+      if(val >= MAXTEMP) colorTemp = MAXTEMP;
+      else if(val <= MINTEMP) colorTemp = MINTEMP;
+      else colorTemp = val;
+      
+      uint8_t colorIndex = map(colorTemp, MINTEMP, MAXTEMP, 0, 255);
+      colorIndex = constrain(colorIndex, 0, 255);
+      //draw the pixels!
+      tft->fillRect(boxWidth * x, (boxHeight * y)+55, boxWidth, boxHeight, camColors[colorIndex]);
+    } 
+  }
+}
 
 void extrapolateTempRange() {
   uint8_t max = 0.0;
